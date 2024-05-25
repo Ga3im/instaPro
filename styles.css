@@ -18,7 +18,9 @@
   cursor: pointer;
   width: 130px;
 }
-
+.red-logo{
+  color: red;
+}
 .header-container {
   margin-bottom: 8px;
 }
@@ -93,6 +95,7 @@
   cursor: pointer;
 }
 
+
 .user-name {
   font-weight: 500;
 }
@@ -116,6 +119,7 @@
   flex-direction: row;
   align-items: center;
   margin-bottom: 12px;
+  height: 150px;
 }
 
 .posts-user-header__user-image {

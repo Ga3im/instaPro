@@ -2,6 +2,12 @@ import { loginUser, registerUser } from "../api.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 
+export let name;
+export const getName = (newName)=>{
+   name = newName;
+  return name;
+}
+
 export function renderAuthPageComponent({ appEl, setUser }) {
   let isLoginMode = true;
   let imageUrl = "";
@@ -96,8 +102,11 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           login: login,
           password: password,
         })
-          .then((user) => {
-            setUser(user.user);
+          .then((data) => {
+            setUser(data.user);
+            console.log(data)
+            console.log(  getName(data.user.name))
+            console.log(data.user.login)
           })
           .catch((error) => {
             console.warn(error);
@@ -132,8 +141,8 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           name: name,
           imageUrl,
         })
-          .then((user) => {
-            setUser(user.user);
+          .then((data) => {
+            setUser(data.user);
           })
           .catch((error) => {
             console.warn(error);

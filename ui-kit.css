@@ -53,6 +53,24 @@ p {
   color: #ffffff;
   border: none;
 }
+.post-page-buttons{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.back-button{
+  display: block;
+  padding: 10px 13px 13px;
+  font-size: 18px;
+  line-height: 22px;
+  border-radius: 5px;
+  background-color: #dfdfdf;
+  color: #000000;
+  border: none;
+}
+.back-button:hover{
+  cursor: pointer;
+}
 
 .link-button {
   display: inline;
@@ -62,9 +80,9 @@ p {
   color: #565eef;
   cursor: pointer;
 }
-
 .button:hover {
   background-color: #6d73ff;
+  cursor: pointer;
 }
 
 .button[disabled="true"],
@@ -84,6 +102,7 @@ p {
 }
 
 .secondary-button:hover {
+  cursor: pointer;
   background-color: #f2eeff;
 }
 

@@ -1,5 +1,6 @@
-import { getPosts } from "./api.js";
+import { getPosts, getUserPosts, postPosts } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
+import { renderUserPageImage } from "./components/user-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
   ADD_POSTS_PAGE,
@@ -20,10 +21,15 @@ export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
 
-const getToken = () => {
+export const setPosts = (newPosts)=>{
+  posts = newPosts;
+  return posts
+}
+export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
 };
+
 
 export const logout = () => {
   user = null;
@@ -49,12 +55,16 @@ export const goToPage = (newPage, data) => {
       page = user ? ADD_POSTS_PAGE : AUTH_PAGE;
       return renderApp();
     }
-
     if (newPage === POSTS_PAGE) {
       page = LOADING_PAGE;
       renderApp();
 
       return getPosts({ token: getToken() })
+      .then((data) => {
+        return data.posts;
+        
+      })
+      
         .then((newPosts) => {
           page = POSTS_PAGE;
           posts = newPosts;
@@ -63,27 +73,39 @@ export const goToPage = (newPage, data) => {
         .catch((error) => {
           console.error(error);
           goToPage(POSTS_PAGE);
+          
         });
     }
-
+    
     if (newPage === USER_POSTS_PAGE) {
-      // TODO: реализовать получение постов юзера из API
+      // TODO: реализовать получение постов юзера из API       1
       console.log("Открываю страницу пользователя: ", data.userId);
-      page = USER_POSTS_PAGE;
-      posts = [];
-      return renderApp();
+      return getUserPosts({ token: getToken(), 
+        id: data.userId })
+      .then((data) => {
+        return data.posts;  
+      })
+      
+        .then((newPosts) => {
+          page = USER_POSTS_PAGE;
+          posts = newPosts;
+          renderApp();
+        })
+        .catch((error) => {
+          console.error(error);
+          goToPage(POSTS_PAGE);
+          
+        });
     }
 
     page = newPage;
     renderApp();
-
     return;
   }
-
   throw new Error("страницы не существует");
-};
+}
 
-const renderApp = () => {
+export const renderApp = () => {
   const appEl = document.getElementById("app");
   if (page === LOADING_PAGE) {
     return renderLoadingPageComponent({
@@ -110,8 +132,7 @@ const renderApp = () => {
     return renderAddPostPageComponent({
       appEl,
       onAddPostClick({ description, imageUrl }) {
-        // TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...", { description, imageUrl });
+        console.log("Добавляю пост...", { description, imageUrl});
         goToPage(POSTS_PAGE);
       },
     });
@@ -124,8 +145,7 @@ const renderApp = () => {
   }
 
   if (page === USER_POSTS_PAGE) {
-    // TODO: реализовать страницу фотографию пользвателя
-    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
+    renderUserPageImage({element:appEl})
     return;
   }
 };
